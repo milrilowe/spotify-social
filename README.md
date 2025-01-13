@@ -1,0 +1,1 @@
+This is an example project showing a large monorepo structure.
