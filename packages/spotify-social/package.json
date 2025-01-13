@@ -1,0 +1,12 @@
+{
+    "name": "@spotify-social/spotify-social-workspace",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+        "build": "pnpm clean && pnpm -r build",
+        "dev": "pnpm -r dev",
+        "lint": "pnpm -r lint",
+        "clean": "pnpm -r exec rm -rf dist",
+        "clean:all": "pnpm -r exec rm -rf dist node_modules"
+    }
+}
