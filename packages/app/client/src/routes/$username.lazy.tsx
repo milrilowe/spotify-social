@@ -9,5 +9,9 @@ function RouteComponent() {
   const username = Route.useParams().username;
 
 
-  return <Profile username={username} />
+  return (
+    <div className="px-2 w-full flex justify-center my-8">
+      <Profile username={username} />
+    </div>
+  )
 }

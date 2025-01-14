@@ -1,8 +1,8 @@
 import { AspectRatio } from '@spotify-social/components';
-import data from '../data';
+import { postsList } from '@/modules/Profile/data';
 
 interface Props {
-    posts: typeof data.posts;
+    posts: typeof postsList;
 }
 
 export default function Posts({ posts }: Props) {
@@ -27,3 +27,5 @@ export default function Posts({ posts }: Props) {
     )
 
 }
+
+export { Posts };
