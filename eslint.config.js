@@ -9,7 +9,7 @@ export default [
     {
         ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**']
     },
-        eslint.configs.recommended,
+    eslint.configs.recommended,
     {
         files: ['**/*.{ts,tsx}'],
         languageOptions: {
@@ -39,7 +39,7 @@ export default [
         },
         settings: {
             react: {
-            version: 'detect'
+                version: 'detect'
             }
         }
     }
