@@ -38,5 +38,6 @@ export {
     Home,
     Inbox,
     Moon,
-    Sun
+    Sun,
+    SquarePlus
 } from 'lucide-react'
