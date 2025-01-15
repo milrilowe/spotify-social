@@ -4,21 +4,28 @@
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "src/index.css"
+    "src/styles/globals.css",
+    "tailwind.config.js",
+    "tailwind.config.mjs"
   ],
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
-    "./styles.css": "./dist/index.css"
+    "./styles.css": {
+      "import": "./dist/index.css"
+    },
+    "./globals.css": {
+      "import": "./src/styles/globals.css"
+    },
+    "./tailwind.config.js": "./tailwind.config.js"
   },
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup && tailwindcss -i ./src/index.css -o ./dist/index.css",
+    "build": "tsup && tailwindcss -i ./src/styles/globals.css -o ./dist/index.css",
     "dev": "tsup --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -30,9 +37,11 @@
     "@storybook/addon-onboarding": "^8.4.7",
     "@storybook/blocks": "^8.4.7",
     "@storybook/builder-vite": "^8.4.7",
+    "@storybook/manager-api": "^8.4.7",
     "@storybook/react": "^8.4.7",
     "@storybook/react-vite": "^8.4.7",
     "@storybook/test": "^8.4.7",
+    "@storybook/theming": "^8.4.7",
     "@types/fs-extra": "^11.0.4",
     "@types/react": "^18.3.18",
     "autoprefixer": "^10.4.20",
@@ -44,6 +53,7 @@
     "storybook": "^8.4.7",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7",
     "tsup": "^8.0.0",
     "typescript": "^5.7.2"
   },
@@ -79,7 +89,6 @@
     "zod": "^3.24.1"
   },
   "peerDependencies": {
-    "@spotify-social/styles": "workspace:*",
     "react": "^18.3.1"
   }
 }

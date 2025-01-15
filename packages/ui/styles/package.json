@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "files": [
     "dist",
-    "tailwind.config.js"
+    "tailwind.config.js",
+    "src/globals.css"
   ],
   "exports": {
-    "./tailwind.config.js": "./tailwind.config.js",
-    "./dist/index.css": "./dist/index.css"
+    "./globals.css": "./src/globals.css",
+    "./tailwind.config.js": "./tailwind.config.js"
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "pnpm clean && tailwindcss -i ./src/globals.css -o ./dist/index.css",
+    "build": "pnpm clean && tailwindcss -i ./src/globals.css -o ./dist/globals.css",
     "dev": "tailwindcss -i ./src/globals.css -o ./dist/index.css --watch"
   },
   "devDependencies": {

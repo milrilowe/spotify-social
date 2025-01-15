@@ -19,7 +19,6 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.17.0",
-		"@spotify-social/styles": "workspace:*",
 		"@tanstack/router-devtools": "^1.95.1",
 		"@tanstack/router-plugin": "^1.95.1",
 		"@types/node": "^22.10.5",
