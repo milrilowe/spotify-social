@@ -1,8 +1,14 @@
-import { Home, Inbox, Menu, Moon, Search, Settings, Sun } from "@spotify-social/icons"
+import { Home, Menu, Moon, Search, SquarePlus, Sun } from "@spotify-social/icons"
 
 import {
     Avatar,
     AvatarImage,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -20,32 +26,23 @@ import {
 } from "@spotify-social/components"
 import { useState } from "react"
 import { useTheme } from "./theme-provider"
+import { CreateAPost } from "../CreateAPost"
 
 // Menu items.
 const items = [
     {
         title: "Home",
-        url: "#",
+        url: "/",
         icon: Home,
     },
     {
         title: "Search",
-        url: "#",
+        url: "/search",
         icon: Search,
     },
     {
-        title: "Messages",
-        url: "#",
-        icon: Inbox,
-    },
-    {
-        title: "Settings",
-        url: "#",
-        icon: Settings,
-    },
-    {
         title: "Profile",
-        url: "#",
+        url: "/profile",
         icon: () => (
             <Avatar className="h-6 w-6">
                 <AvatarImage src="https://github.com/shadcn.png" />
@@ -81,6 +78,10 @@ export function AppSidebar() {
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
+
+                            <SidebarMenuItem>
+
+                            </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
