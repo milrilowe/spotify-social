@@ -5,10 +5,17 @@ import 'dotenv/config';
 import { appRouter } from './router';
 import { createContext } from './trpc';
 import session from 'express-session';
+import pgSession from 'connect-pg-simple';
+import { Pool } from 'pg';
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+
+const sessionPool = new Pool({
+  max: 5,
+  connectionString: process.env.DATABASE_URL
+})
 
 app.use(cors({
   origin: process.env.CLIENT_URL,
@@ -17,6 +24,11 @@ app.use(cors({
 
 app.use(
   session({
+    store: new (pgSession(session))({
+      pool: sessionPool,
+      tableName: 'sessions',
+      pruneSessionInterval: 60 * 60
+    }),
     secret: 'dev-secret-key',
     resave: false,
     saveUninitialized: false,

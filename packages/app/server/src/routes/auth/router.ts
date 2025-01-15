@@ -99,16 +99,18 @@ export const authRouter = router({
 
             return { success: true, user };
         } catch (error) {
+            console.error(error)
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
-                message: 'Authentication failed',
+                message: 'Authentication failed:',
                 cause: error,
             });
         }
     }),
     getSession: publicProcedure.query(({ ctx }) => {
+        console.log(ctx.session.spotifyTokens)
         return {
-            userId: ctx.session.userId,
+            spotify_id: ctx.session.userId,
             isAuthenticated: !!ctx.session.spotifyTokens
         }
     })
