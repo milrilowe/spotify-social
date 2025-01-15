@@ -39,24 +39,22 @@ export default function Following({ numberOfFollowing, following }: Props) {
                     {filteredFollowing.length > 0 ? (
                         <div className="space-y-4 max-h-96 overflow-y-auto">
                             {filteredFollowing.map((follow) => (
-                                <>
-                                    <div key={follow.id} className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <img
-                                                src={follow.avatar}
-                                                alt={`${follow.name}'s avatar`}
-                                                className="w-10 h-10 rounded-full"
-                                            />
-                                            <div>
-                                                <p className="font-medium">{follow.username}</p>
-                                                <p className="text-sm text-gray-500">{follow.name}</p>
-                                            </div>
+                                <div key={follow.id} className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <img
+                                            src={follow.avatar}
+                                            alt={`${follow.name}'s avatar`}
+                                            className="w-10 h-10 rounded-full"
+                                        />
+                                        <div>
+                                            <p className="font-medium">{follow.username}</p>
+                                            <p className="text-sm text-gray-500">{follow.name}</p>
                                         </div>
-                                        <button className="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-600">
-                                            Follow
-                                        </button>
                                     </div>
-                                </>
+                                    <button className="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-600">
+                                        Follow
+                                    </button>
+                                </div>
                             ))}
                         </div>
                     ) : (

@@ -95,7 +95,7 @@ export const followingList = [
 
 export const postsList = [
     {
-        "id": "string",
+        "id": 1,
         "content": "string",
         "likes": 0,
         "createdAt": "2021-09-23T21:05:00.000Z",
@@ -124,7 +124,7 @@ export const postsList = [
         ]
     },
     {
-        "id": "string",
+        "id": 2,
         "content": "string",
         "likes": 0,
         "createdAt": "2021-09-23T21:05:00.000Z",
@@ -153,7 +153,7 @@ export const postsList = [
         ]
     },
     {
-        "id": "string",
+        "id": 3,
         "content": "string",
         "likes": 0,
         "createdAt": "2021-09-23T21:05:00.000Z",

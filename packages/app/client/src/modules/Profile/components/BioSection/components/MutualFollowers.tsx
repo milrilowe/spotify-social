@@ -20,13 +20,15 @@ export default function MutualFollowers({ mutualFollowers }: Props) {
 
     return (
         <Dialog>
-            <DialogTrigger className='flex gap-1'>
-                <span>Followed by</span>
-                {mutualFollowers.followers.map((follower, index) => (
-                    <span key={follower} className="font-semibold text-blue-500">{`${follower}${index === mutualFollowers.followers.length - 1 ? '' : ','} `}</span>
-                ))}
-                {additionalFollowers > 0 ? <span>+{additionalFollowers} more</span> : null}
-            </DialogTrigger>
+            <div>
+                <DialogTrigger className='flex gap-1'>
+                    <span>Followed by</span>
+                    {mutualFollowers.followers.map((follower, index) => (
+                        <span key={follower} className="font-semibold text-blue-500">{`${follower}${index === mutualFollowers.followers.length - 1 ? '' : ','} `}</span>
+                    ))}
+                    {additionalFollowers > 0 ? <span>+{additionalFollowers} more</span> : null}
+                </DialogTrigger>
+            </div>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-xl font-semibold mb-4">

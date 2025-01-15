@@ -1,6 +1,6 @@
 import { Separator } from '@spotify-social/components';
 import { profileData, postsList } from './data';
-import { BioSection, Posts, AvatarSection } from './components';
+import { BioSection, Post, AvatarSection } from './components';
 
 interface Props {
     username: string;
@@ -20,7 +20,9 @@ export default function Profile({ username }: Props) {
             <Separator />
 
             <div className="grid grid-cols-3 gap-1">
-                <Posts posts={posts} />
+                {posts.map((post) => (
+                    <Post post={post} key={post.id} />
+                ))}
             </div>
         </div>
     )

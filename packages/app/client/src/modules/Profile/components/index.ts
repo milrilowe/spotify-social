@@ -1,3 +1,3 @@
 export * from './AvatarSection';
 export * from './BioSection';
-export * from './Posts';
+export * from './Post';
