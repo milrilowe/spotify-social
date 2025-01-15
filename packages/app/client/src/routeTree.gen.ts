@@ -13,19 +13,33 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as CallbackImport } from './routes/callback'
 
 // Create Virtual Routes
 
+const LoginLazyImport = createFileRoute('/login')()
 const UsernameLazyImport = createFileRoute('/$username')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const LoginLazyRoute = LoginLazyImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
 
 const UsernameLazyRoute = UsernameLazyImport.update({
   id: '/$username',
   path: '/$username',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/$username.lazy').then((d) => d.Route))
+
+const CallbackRoute = CallbackImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
@@ -44,11 +58,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/callback': {
+      id: '/callback'
+      path: '/callback'
+      fullPath: '/callback'
+      preLoaderRoute: typeof CallbackImport
+      parentRoute: typeof rootRoute
+    }
     '/$username': {
       id: '/$username'
       path: '/$username'
       fullPath: '/$username'
       preLoaderRoute: typeof UsernameLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -58,37 +86,47 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/callback': typeof CallbackRoute
   '/$username': typeof UsernameLazyRoute
+  '/login': typeof LoginLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/callback': typeof CallbackRoute
   '/$username': typeof UsernameLazyRoute
+  '/login': typeof LoginLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/callback': typeof CallbackRoute
   '/$username': typeof UsernameLazyRoute
+  '/login': typeof LoginLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$username'
+  fullPaths: '/' | '/callback' | '/$username' | '/login'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$username'
-  id: '__root__' | '/' | '/$username'
+  to: '/' | '/callback' | '/$username' | '/login'
+  id: '__root__' | '/' | '/callback' | '/$username' | '/login'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  CallbackRoute: typeof CallbackRoute
   UsernameLazyRoute: typeof UsernameLazyRoute
+  LoginLazyRoute: typeof LoginLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  CallbackRoute: CallbackRoute,
   UsernameLazyRoute: UsernameLazyRoute,
+  LoginLazyRoute: LoginLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -102,14 +140,22 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/$username"
+        "/callback",
+        "/$username",
+        "/login"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
     },
+    "/callback": {
+      "filePath": "callback.tsx"
+    },
     "/$username": {
       "filePath": "$username.lazy.tsx"
+    },
+    "/login": {
+      "filePath": "login.lazy.tsx"
     }
   }
 }

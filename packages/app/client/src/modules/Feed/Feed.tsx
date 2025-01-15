@@ -1,12 +1,17 @@
 import { Separator } from '@spotify-social/components';
 import { Post } from './components';
 import data from './data';
+import { Link } from '@tanstack/react-router';
+import { Heart, More, Save, Send, SpeechBubble } from '@spotify-social/icons';
+import { api } from '@/utils/trpc';
 
 interface Props {
 
 }
 
 export default function Feed({ }: Props) {
+
+    const user = api.auth.getSession.useQuery()
 
     return (
         <div className="w-full p-2">
