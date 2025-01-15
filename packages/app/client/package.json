@@ -12,9 +12,16 @@
   "dependencies": {
     "@spotify-social/components": "workspace:*",
     "@spotify-social/icons": "workspace:*",
+    "@tanstack/react-query": "^5.64.1",
+    "@tanstack/react-query-devtools": "^5.64.1",
     "@tanstack/react-router": "^1.95.1",
+    "@tanstack/zod-adapter": "^1.97.0",
+    "@trpc/client": "11.0.0-rc.700",
+    "@trpc/react-query": "11.0.0-rc.700",
+    "@trpc/server": "11.0.0-rc.700",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

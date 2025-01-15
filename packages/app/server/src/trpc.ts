@@ -4,7 +4,7 @@ import { Session } from "express-session";
 import { SpotifyTokenResponse } from './routes/auth/types';
 
 interface AppSession extends Session {
-    spotifyToken?: SpotifyTokenResponse;
+    spotifyTokens?: SpotifyTokenResponse;
     userId?: string;
 }
 

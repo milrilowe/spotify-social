@@ -32,7 +32,8 @@
     ]
   },
   "include": [
-    "src"
+    "src/**/*",
+    "../server/**/*"
   ],
   "references": [
     {
