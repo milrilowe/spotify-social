@@ -37,4 +37,6 @@ export {
     Bookmark as Save,
     Home,
     Inbox,
+    Moon,
+    Sun
 } from 'lucide-react'

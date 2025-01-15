@@ -34,7 +34,6 @@ export const trpcClient = api.createClient({
   ]
 })
 
-
 // Render the app
 const rootElement = document.getElementById('root')!
 if (!rootElement.innerHTML) {

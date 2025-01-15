@@ -1,18 +1,20 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@spotify-social/components";
-import data from "../data";
+import { profileData } from "@/modules/Profile/data";
 
 interface Props {
-    data: typeof data;
+    profile: typeof profileData;
 }
 
-export default function AvatarSection({ data }: Props) {
+export default function AvatarSection({ profile }: Props) {
 
     return (
         <div className="flex justify-center items-center">
             <Avatar className="w-36 h-36">
-                <AvatarImage src={data.user.avatar} />
+                <AvatarImage src={profile.user.avatar} />
                 <AvatarFallback>CN</AvatarFallback>
             </Avatar>
         </div>
     )
 }
+
+export { AvatarSection };
