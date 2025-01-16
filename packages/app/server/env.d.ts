@@ -4,5 +4,6 @@ declare namespace NodeJS {
         SPOTIFY_CLIENT_SECRET: string;
         SPOTIFY_REDIRECT_URI: string;
         CLIENT_URL: string;
+        DATABASE_URL: string;
     }
 }
