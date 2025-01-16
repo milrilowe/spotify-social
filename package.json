@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "turbo build",
+    "build:ui": "pnpm --filter @spotify-social/components --filter @spotify-social/hooks --filter @spotify-social/icons build",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "lint:fix": "turbo lint -- --fix",

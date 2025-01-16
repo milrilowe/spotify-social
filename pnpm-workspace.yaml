@@ -1,6 +1,3 @@
 packages:
-  - 'packages/app/client'
-  - 'packages/app/server'
-  - 'packages/ui/components'
-  - 'packages/ui/hooks'
-  - 'packages/ui/icons'
+  - 'packages/app/**'
+  - 'packages/ui/**'
