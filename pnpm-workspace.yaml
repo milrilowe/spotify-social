@@ -4,4 +4,3 @@ packages:
   - 'packages/ui/components'
   - 'packages/ui/hooks'
   - 'packages/ui/icons'
-  - 'packages/ui/styles'
