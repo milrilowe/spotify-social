@@ -10,6 +10,7 @@
   "scripts": {
     "build": "turbo build",
     "build:ui": "pnpm --filter @spotify-social/components --filter @spotify-social/hooks --filter @spotify-social/icons build",
+    "install:ui": "pnpm --filter @spotify-social/components --filter @spotify-social/hooks --filter @spotify-social/icons install",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "lint:fix": "turbo lint -- --fix",
