@@ -7,7 +7,7 @@ interface Props {
 
 export default function ProfileStats({ profile }: Props) {
     return (
-        <div className="flex gap-4">
+        <div className="flex gap-4 text-sm">
             <div>
                 <p>{profileData.numberOfPosts} posts</p>
             </div>

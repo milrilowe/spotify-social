@@ -14,13 +14,14 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as CallbackImport } from './routes/callback'
+import { Route as AuthImport } from './routes/_auth'
+import { Route as AuthFeedImport } from './routes/_auth.feed'
 
 // Create Virtual Routes
 
 const LoginLazyImport = createFileRoute('/login')()
-const CreateLazyImport = createFileRoute('/create')()
-const UsernameLazyImport = createFileRoute('/$username')()
 const IndexLazyImport = createFileRoute('/')()
+const AuthUsernameLazyImport = createFileRoute('/_auth/$username')()
 
 // Create/Update Routes
 
@@ -30,21 +31,14 @@ const LoginLazyRoute = LoginLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
 
-const CreateLazyRoute = CreateLazyImport.update({
-  id: '/create',
-  path: '/create',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/create.lazy').then((d) => d.Route))
-
-const UsernameLazyRoute = UsernameLazyImport.update({
-  id: '/$username',
-  path: '/$username',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/$username.lazy').then((d) => d.Route))
-
 const CallbackRoute = CallbackImport.update({
   id: '/callback',
   path: '/callback',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthRoute = AuthImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,6 +47,20 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const AuthUsernameLazyRoute = AuthUsernameLazyImport.update({
+  id: '/$username',
+  path: '/$username',
+  getParentRoute: () => AuthRoute,
+} as any).lazy(() =>
+  import('./routes/_auth.$username.lazy').then((d) => d.Route),
+)
+
+const AuthFeedRoute = AuthFeedImport.update({
+  id: '/feed',
+  path: '/feed',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -65,25 +73,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
     '/callback': {
       id: '/callback'
       path: '/callback'
       fullPath: '/callback'
       preLoaderRoute: typeof CallbackImport
-      parentRoute: typeof rootRoute
-    }
-    '/$username': {
-      id: '/$username'
-      path: '/$username'
-      fullPath: '/$username'
-      preLoaderRoute: typeof UsernameLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/create': {
-      id: '/create'
-      path: '/create'
-      fullPath: '/create'
-      preLoaderRoute: typeof CreateLazyImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -93,58 +94,92 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/feed': {
+      id: '/_auth/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof AuthFeedImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/$username': {
+      id: '/_auth/$username'
+      path: '/$username'
+      fullPath: '/$username'
+      preLoaderRoute: typeof AuthUsernameLazyImport
+      parentRoute: typeof AuthImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AuthRouteChildren {
+  AuthFeedRoute: typeof AuthFeedRoute
+  AuthUsernameLazyRoute: typeof AuthUsernameLazyRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthFeedRoute: AuthFeedRoute,
+  AuthUsernameLazyRoute: AuthUsernameLazyRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '': typeof AuthRouteWithChildren
   '/callback': typeof CallbackRoute
-  '/$username': typeof UsernameLazyRoute
-  '/create': typeof CreateLazyRoute
   '/login': typeof LoginLazyRoute
+  '/feed': typeof AuthFeedRoute
+  '/$username': typeof AuthUsernameLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '': typeof AuthRouteWithChildren
   '/callback': typeof CallbackRoute
-  '/$username': typeof UsernameLazyRoute
-  '/create': typeof CreateLazyRoute
   '/login': typeof LoginLazyRoute
+  '/feed': typeof AuthFeedRoute
+  '/$username': typeof AuthUsernameLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/_auth': typeof AuthRouteWithChildren
   '/callback': typeof CallbackRoute
-  '/$username': typeof UsernameLazyRoute
-  '/create': typeof CreateLazyRoute
   '/login': typeof LoginLazyRoute
+  '/_auth/feed': typeof AuthFeedRoute
+  '/_auth/$username': typeof AuthUsernameLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/callback' | '/$username' | '/create' | '/login'
+  fullPaths: '/' | '' | '/callback' | '/login' | '/feed' | '/$username'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/callback' | '/$username' | '/create' | '/login'
-  id: '__root__' | '/' | '/callback' | '/$username' | '/create' | '/login'
+  to: '/' | '' | '/callback' | '/login' | '/feed' | '/$username'
+  id:
+    | '__root__'
+    | '/'
+    | '/_auth'
+    | '/callback'
+    | '/login'
+    | '/_auth/feed'
+    | '/_auth/$username'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  AuthRoute: typeof AuthRouteWithChildren
   CallbackRoute: typeof CallbackRoute
-  UsernameLazyRoute: typeof UsernameLazyRoute
-  CreateLazyRoute: typeof CreateLazyRoute
   LoginLazyRoute: typeof LoginLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  AuthRoute: AuthRouteWithChildren,
   CallbackRoute: CallbackRoute,
-  UsernameLazyRoute: UsernameLazyRoute,
-  CreateLazyRoute: CreateLazyRoute,
   LoginLazyRoute: LoginLazyRoute,
 }
 
@@ -159,26 +194,34 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/_auth",
         "/callback",
-        "/$username",
-        "/create",
         "/login"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
     },
+    "/_auth": {
+      "filePath": "_auth.tsx",
+      "children": [
+        "/_auth/feed",
+        "/_auth/$username"
+      ]
+    },
     "/callback": {
       "filePath": "callback.tsx"
     },
-    "/$username": {
-      "filePath": "$username.lazy.tsx"
-    },
-    "/create": {
-      "filePath": "create.lazy.tsx"
-    },
     "/login": {
       "filePath": "login.lazy.tsx"
+    },
+    "/_auth/feed": {
+      "filePath": "_auth.feed.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/$username": {
+      "filePath": "_auth.$username.lazy.tsx",
+      "parent": "/_auth"
     }
   }
 }

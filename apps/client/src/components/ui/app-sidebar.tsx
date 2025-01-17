@@ -1,8 +1,9 @@
-import { Home, Menu, Moon, Search, SquarePlus, Sun } from "@spotify-social/icons"
+import { Home, Menu, Moon, Search, Settings, SquarePlus, Sun } from "@spotify-social/icons"
 
 import {
     Avatar,
     AvatarImage,
+    Button,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -10,16 +11,15 @@ import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
+    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     Switch,
 } from "@spotify-social/components"
-import { useState } from "react"
 import { useTheme } from "./theme-provider"
+import { CreateAPost } from "../CreateAPost"
+import { useAuth } from "@/context/auth"
 import { Link } from "@tanstack/react-router"
 
 // Menu items.
@@ -35,11 +35,6 @@ const items = [
         icon: Search,
     },
     {
-        title: "Create a Post",
-        url: "/create",
-        icon: SquarePlus,
-    },
-    {
         title: "Profile",
         url: "/profile",
         icon: () => (
@@ -51,82 +46,85 @@ const items = [
 ]
 
 export function AppSidebar() {
-    const [isAppearanceExpanded, setIsAppearanceExpanded] = useState(false)
     const { theme, setTheme } = useTheme();
+    const { user, spotify_id } = useAuth()
 
     function handleThemeChange() {
         setTheme(theme === "dark" ? "light" : "dark")
     }
 
     return (
-        <Sidebar>
+        <Sidebar className="" >
+            <SidebarHeader>
+                <Link to={'/$username'} params={{ username: spotify_id ?? '' }}>
+                    <Button variant={'ghost'} className={'justify-start py-1 h-fit px-2'}>
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={user?.avatar ?? undefined} />
+                        </Avatar>
+                        <span>{user?.display_name}</span>
+                    </Button>
+                </Link>
+            </SidebarHeader>
             <SidebarContent>
-                <SidebarGroup className="flex gap-8">
-                    <SidebarGroupLabel>Spotify Social</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu className="flex gap-2">
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild className="py-6">
-                                        <Link to={item.url}>
-                                            <div className="h-8 w-8 flex items-center">
-                                                <item.icon />
-                                            </div>
-                                            <span className="text-xl">{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
+
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link to="/feed">
+                                <Button variant={'ghost'} className="w-full justify-start px-2">
+                                    <Home />
+                                    <span>Home</span>
+                                </Button>
+                            </Link>
+                        </SidebarMenuButton>
+
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+
+                        <SidebarMenuButton asChild>
+                            <Link to="/feed">
+                                <Button variant={'ghost'} className="w-full justify-start px-2">
+                                    <Search />
+                                    <span>Search</span>
+                                </Button>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+
             </SidebarContent>
-            <SidebarFooter>
+            <SidebarFooter className="pb-5">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton className="py-6">
-                                    <div className="h-8 w-8 flex items-center">
-                                        <Menu size={24} />
-                                    </div>
-                                    <span className="text-xl">More</span>
+                                <SidebarMenuButton>
+                                    <Settings />
+                                    <span>Settings</span>
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 side="top"
-                                className="w-[--radix-popper-anchor-width]"
+                                className=""
                             >
+
                                 <DropdownMenuItem
-                                    className="py-4"
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                        setIsAppearanceExpanded(!isAppearanceExpanded)
-                                    }}
+                                    className=" flex justify-between items-center"
+                                    onSelect={(e) => e.preventDefault()}
                                 >
-                                    {theme === "dark" ? <Moon size={24} /> : <Sun size={24} />}
-                                    <span>Switch appearance</span>
+                                    <div className="flex items-center gap-2">
+                                        {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
+                                        <span>Theme</span>
+                                    </div>
+                                    <Switch
+
+                                        checked={theme === "dark"}
+                                        onCheckedChange={handleThemeChange}
+                                    />
                                 </DropdownMenuItem>
 
-                                {isAppearanceExpanded && (
-                                    <div className="border-t border-gray-200 dark:border-gray-800">
-                                        <DropdownMenuItem
-                                            className="py-4 pl-12 flex justify-between items-center"
-                                            onSelect={(e) => e.preventDefault()}
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <Moon className="mr-2" size={20} />
-                                                <span>Dark mode</span>
-                                            </div>
-                                            <Switch
-                                                checked={theme === "dark"}
-                                                onCheckedChange={handleThemeChange}
-                                            />
-                                        </DropdownMenuItem>
-                                    </div>
-                                )}
 
-                                <DropdownMenuItem className="py-4">
+                                <DropdownMenuItem className="">
                                     <span>Sign out</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>

@@ -21,7 +21,7 @@ export default function MutualFollowers({ mutualFollowers }: Props) {
     return (
         <Dialog>
             <div>
-                <DialogTrigger className='flex gap-1'>
+                <DialogTrigger className='flex gap-1 text-sm'>
                     <span>Followed by</span>
                     {mutualFollowers.followers.map((follower, index) => (
                         <span key={follower} className="font-semibold text-blue-500">{`${follower}${index === mutualFollowers.followers.length - 1 ? '' : ','} `}</span>

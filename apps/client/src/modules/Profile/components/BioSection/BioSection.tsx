@@ -8,14 +8,14 @@ interface Props {
 
 export default function BioSection({ username, profile }: Props) {
     return (
-        <div className="col-span-2 flex flex-col gap-4">
+        <div className="col-span-2 flex flex-col gap-2">
 
             <ProfileHeader username={username} profile={profile} />
 
             <ProfileStats profile={profile} />
 
             {/* Bio */}
-            <p>{profile.bio}</p>
+            {/* <p>{profile.bio}</p> */}
 
             <MutualFollowers mutualFollowers={profile.mutualFollowers} />
 
