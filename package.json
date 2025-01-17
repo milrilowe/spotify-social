@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "packages/app/**",
-    "packages/spotify-social/**",
-    "packages/ui/**"
+    "app/**",
+    "packages/ui/**",
+    "packages/mocks/**"
   ],
   "scripts": {
     "build": "turbo build",
