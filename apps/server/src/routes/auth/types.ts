@@ -10,4 +10,12 @@ export interface SpotifyUser {
     id: string;
     email: string;
     display_name: string;
+    images: Image[];
+    country: string;
+}
+
+export interface Image {
+    url: string,
+    height: number,
+    width: number
 }

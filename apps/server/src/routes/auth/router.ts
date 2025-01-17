@@ -6,7 +6,6 @@ import { TRPCError } from '@trpc/server';
 import { SpotifyTokenResponse, SpotifyUser } from './types';
 import { db } from '../../db';
 import { usersTable } from '../../db/schema';
-import { eq } from 'drizzle-orm';
 
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
@@ -42,6 +41,7 @@ export const authRouter = router({
         return { url: spotifyAuthUrl.toString(), state }
     }),
     callback: publicProcedure.input(z.object({ code: z.string(), state: z.string() })).mutation(async ({ input, ctx }) => {
+
         try {
             // Exchange code for tokens
             const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
@@ -49,7 +49,7 @@ export const authRouter = router({
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     Authorization: `Basic ${Buffer.from(
-                        `${process.env.SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+                        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
                     ).toString('base64')}`,
                 },
                 body: new URLSearchParams({
@@ -84,13 +84,17 @@ export const authRouter = router({
 
             const user: SpotifyUser = await userResponse.json();
 
-            const existingUser = await db.select().from(usersTable).where(eq(usersTable.spotify_id, user.id))
+            const existingUser = await db.query.usersTable.findFirst({
+                where: (usersTable, { eq }) => eq(usersTable.spotify_id, user.id)
+            })
 
-            if (existingUser.length === 0) {
+            if (!existingUser) {
                 await db.insert(usersTable).values({
                     spotify_id: user.id,
                     email: user.email,
-                    display_name: user.display_name
+                    display_name: user.display_name,
+                    avatar: user.images[0].url || null,
+                    country: user.country
                 }).catch((e) => console.error(e))
             }
 
@@ -107,9 +111,19 @@ export const authRouter = router({
             });
         }
     }),
-    getSession: publicProcedure.query(({ ctx }) => {
-        console.log(ctx.session.spotifyTokens)
+    getSession: publicProcedure.query(async ({ ctx }) => {
+        if (!ctx.session.spotifyTokens && !ctx.session.userId) return {
+            user: null,
+            spotify_id: null,
+            isAuthenticated: false
+        }
+
+        const user = await db.query.usersTable.findFirst({
+            where: (usersTable, { eq }) => eq(usersTable.spotify_id, ctx.session.userId)
+        })
+
         return {
+            user: user,
             spotify_id: ctx.session.userId,
             isAuthenticated: !!ctx.session.spotifyTokens
         }
