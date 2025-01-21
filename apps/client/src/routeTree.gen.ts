@@ -13,23 +13,23 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
 import { Route as CallbackImport } from './routes/callback'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthFeedImport } from './routes/_auth.feed'
 
 // Create Virtual Routes
 
-const LoginLazyImport = createFileRoute('/login')()
 const IndexLazyImport = createFileRoute('/')()
 const AuthUsernameLazyImport = createFileRoute('/_auth/$username')()
 
 // Create/Update Routes
 
-const LoginLazyRoute = LoginLazyImport.update({
+const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+} as any)
 
 const CallbackRoute = CallbackImport.update({
   id: '/callback',
@@ -91,7 +91,7 @@ declare module '@tanstack/react-router' {
       id: '/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginLazyImport
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/_auth/feed': {
@@ -129,7 +129,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '': typeof AuthRouteWithChildren
   '/callback': typeof CallbackRoute
-  '/login': typeof LoginLazyRoute
+  '/login': typeof LoginRoute
   '/feed': typeof AuthFeedRoute
   '/$username': typeof AuthUsernameLazyRoute
 }
@@ -138,7 +138,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '': typeof AuthRouteWithChildren
   '/callback': typeof CallbackRoute
-  '/login': typeof LoginLazyRoute
+  '/login': typeof LoginRoute
   '/feed': typeof AuthFeedRoute
   '/$username': typeof AuthUsernameLazyRoute
 }
@@ -148,7 +148,7 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/_auth': typeof AuthRouteWithChildren
   '/callback': typeof CallbackRoute
-  '/login': typeof LoginLazyRoute
+  '/login': typeof LoginRoute
   '/_auth/feed': typeof AuthFeedRoute
   '/_auth/$username': typeof AuthUsernameLazyRoute
 }
@@ -173,14 +173,14 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AuthRoute: typeof AuthRouteWithChildren
   CallbackRoute: typeof CallbackRoute
-  LoginLazyRoute: typeof LoginLazyRoute
+  LoginRoute: typeof LoginRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AuthRoute: AuthRouteWithChildren,
   CallbackRoute: CallbackRoute,
-  LoginLazyRoute: LoginLazyRoute,
+  LoginRoute: LoginRoute,
 }
 
 export const routeTree = rootRoute
@@ -213,7 +213,7 @@ export const routeTree = rootRoute
       "filePath": "callback.tsx"
     },
     "/login": {
-      "filePath": "login.lazy.tsx"
+      "filePath": "login.tsx"
     },
     "/_auth/feed": {
       "filePath": "_auth.feed.tsx",

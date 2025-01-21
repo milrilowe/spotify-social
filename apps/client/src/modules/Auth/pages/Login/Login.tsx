@@ -1,7 +1,9 @@
+import { Route } from "@/routes/login";
 import { api } from "@/utils/trpc";
 import { Button } from "@spotify-social/components";
 
 export default function Login() {
+    const { redirect } = Route.useSearch()
 
     const spotifyLogin = api.auth.login.useQuery()
 
