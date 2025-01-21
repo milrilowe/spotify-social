@@ -12,6 +12,7 @@ export interface AuthContext {
         avatar: string | null;
         country: string | null;
     } | null
+    refetchSession: () => void
 }
 
 const AuthContext = createContext<AuthContext | null>(null);
@@ -19,7 +20,12 @@ const AuthContext = createContext<AuthContext | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
     const session = api.auth.getSession.useQuery();
 
+    async function refetchSession() {
+        await session.refetch();
+    }
+
     const value: AuthContext = {
+        refetchSession,
         user: session.data?.user || null,
         isAuthenticated: session.data?.isAuthenticated || false,
         spotify_id: session.data?.spotify_id || null

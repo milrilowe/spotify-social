@@ -3,13 +3,12 @@ import { api } from "@/utils/trpc";
 import { useEffect, useRef } from "react";
 import { router } from "@/main";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/context/auth";
 import { getQueryKey } from "@trpc/react-query";
+import { useAuth } from "@/context/auth";
 
 export default function Callback() {
 
-    const queryClient = useQueryClient();
-    const sessionQueryKey = getQueryKey(api.auth.getSession)
+    const { refetchSession } = useAuth()
     const { code, state } = Route.useSearch()
     const storedState = window.sessionStorage.getItem('SPOTIFY_AUTH_STATE_KEY')
     const hasCalledMutation = useRef(false);
@@ -17,8 +16,8 @@ export default function Callback() {
     const callbackMutation = api.auth.callback.useMutation({
         onSuccess: async () => {
             const { redirect } = await JSON.parse(decodeURIComponent(storedState!))
-            console.log(redirect)
-            router.navigate({ to: redirect || '/' })
+            await refetchSession
+            // router.navigate({ to: redirect || '/' })
             sessionStorage.removeItem('SPOTIFY_AUTH_STATE_KEY')
         }
     });
