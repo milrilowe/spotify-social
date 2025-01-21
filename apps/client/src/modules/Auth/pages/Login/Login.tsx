@@ -5,13 +5,15 @@ import { Button } from "@spotify-social/components";
 export default function Login() {
     const { redirect } = Route.useSearch()
 
-    const spotifyLogin = api.auth.login.useQuery()
+    const spotifyLogin = api.auth.login.useMutation({
+        onSuccess: (data) => {
+            sessionStorage.setItem('SPOTIFY_AUTH_STATE_KEY', spotifyLogin.data.state)
+            window.location.href = data.url
+        }
+    })
 
     function handleLogin() {
-        if (spotifyLogin.data) {
-            sessionStorage.setItem('SPOTIFY_AUTH_STATE_KEY', spotifyLogin.data.state)
-            window.location.href = spotifyLogin.data.url
-        }
+        spotifyLogin.mutate({ redirect })
     }
 
     return (
