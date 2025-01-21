@@ -3,7 +3,7 @@ import { generateRandomString } from './util';
 import { publicProcedure, router } from '../../trpc';
 import z from 'zod';
 import { TRPCError } from '@trpc/server';
-import { SpotifyTokenResponse, SpotifyUser } from './types';
+import { SpotifyTokenResponse, SpotifyUser } from '../../types';
 import { db } from '../../db';
 import { usersTable } from '../../db/schema';
 
@@ -28,12 +28,15 @@ const SCOPES = [
 
 
 export const authRouter = router({
-    login: publicProcedure.query(async ({ ctx }) => {
-        let state = generateRandomString(16);
+    login: publicProcedure.input(z.object({ redirect: z.string() })).mutation(async ({ ctx, input }) => {
+        const { redirect } = input;
+        let state = encodeURIComponent(JSON.stringify({
+            redirect: redirect
+        }))
         const spotifyAuthUrl = new URL('https://accounts.spotify.com/authorize');
         spotifyAuthUrl.searchParams.append('client_id', SPOTIFY_CLIENT_ID!);
         spotifyAuthUrl.searchParams.append('response_type', 'code');
-        spotifyAuthUrl.searchParams.append('redirect_uri', SPOTIFY_REDIRECT_URI!);
+        spotifyAuthUrl.searchParams.append('redirect_uri', `${SPOTIFY_REDIRECT_URI!}`);
         spotifyAuthUrl.searchParams.append('scope', SCOPES.join(' '));
         // spotifyAuthUrl.searchParams.append('show_dialog', 'true');
         spotifyAuthUrl.searchParams.append('state', state);
@@ -82,20 +85,18 @@ export const authRouter = router({
                 });
             }
 
-            const user = await userResponse.json() as SpotifyUser;
+            const user = await userResponse.json() as SpotifyUser
 
             const existingUser = await db.query.usersTable.findFirst({
                 where: (usersTable, { eq }) => eq(usersTable.spotify_id, user.id)
             })
-
-            console.log(user)
 
             if (!existingUser) {
                 await db.insert(usersTable).values({
                     spotify_id: user.id,
                     email: user.email,
                     display_name: user.display_name,
-                    avatar: user.images[0]?.url || null,
+                    avatar: user.images[0].url || null,
                     country: user.country
                 }).catch((e) => console.error(e))
             }

@@ -10,6 +10,7 @@ interface RouterContext {
 
 export const Route = createRootRouteWithContext<RouterContext>()(
     {
+
         component: () => (
             <>
                 <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">

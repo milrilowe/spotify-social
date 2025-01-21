@@ -1,14 +1,13 @@
 import { AppSidebar } from '@/components'
-import { SidebarProvider, SidebarTrigger } from '@spotify-social/components'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth')({
-    beforeLoad: ({ context }) => {
+    beforeLoad: ({ context, location }) => {
         if (!context.auth.isAuthenticated) {
             throw redirect({
                 to: '/login',
                 search: {
-                    redirect: location.href
+                    redirect: location.pathname
                 }
             })
         }

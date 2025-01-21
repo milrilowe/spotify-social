@@ -53,7 +53,7 @@ if (!rootElement.innerHTML) {
             <App />
           </AuthProvider>
         </StrictMode>
-        <ReactQueryDevtools />
+        <ReactQueryDevtools position='bottom-right' />
       </QueryClientProvider>
     </api.Provider>,
   )

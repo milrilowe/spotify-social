@@ -7,7 +7,7 @@ export default function Login() {
 
     const spotifyLogin = api.auth.login.useMutation({
         onSuccess: (data) => {
-            sessionStorage.setItem('SPOTIFY_AUTH_STATE_KEY', spotifyLogin.data.state)
+            sessionStorage.setItem('SPOTIFY_AUTH_STATE_KEY', data.state)
             window.location.href = data.url
         }
     })
@@ -17,6 +17,6 @@ export default function Login() {
     }
 
     return (
-        <Button onClick={handleLogin} disabled={spotifyLogin.isLoading}>Login with Spotify</Button>
+        <Button onClick={handleLogin} disabled={spotifyLogin.isPending}>Login with Spotify</Button>
     )
 }

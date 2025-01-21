@@ -19,11 +19,7 @@
     "@tanstack/react-router": "^1.95.1",
     "@tanstack/zod-adapter": "^1.97.0",
     "@trpc/client": "10.45.2",
-<<<<<<< HEAD
-    "@trpc/react-query": "^10.45.2",
-=======
     "@trpc/react-query": "10.45.2",
->>>>>>> miles
     "@trpc/server": "10.45.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
