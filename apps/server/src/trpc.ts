@@ -1,7 +1,7 @@
 import { initTRPC, type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import type { Session } from "express-session";
-import type { SpotifyTokenResponse } from './routes/auth/types';
+import type { SpotifyTokenResponse } from './types';
 
 interface AppSession extends Session {
     spotifyTokens?: SpotifyTokenResponse;

@@ -66,7 +66,7 @@ export const authRouter = router({
                 });
             }
 
-            const tokens: SpotifyTokenResponse = await tokenResponse.json();
+            const tokens = await tokenResponse.json() as SpotifyTokenResponse;
 
             // Get user profile
             const userResponse = await fetch('https://api.spotify.com/v1/me', {
@@ -82,18 +82,20 @@ export const authRouter = router({
                 });
             }
 
-            const user: SpotifyUser = await userResponse.json();
+            const user = await userResponse.json() as SpotifyUser;
 
             const existingUser = await db.query.usersTable.findFirst({
                 where: (usersTable, { eq }) => eq(usersTable.spotify_id, user.id)
             })
+
+            console.log(user)
 
             if (!existingUser) {
                 await db.insert(usersTable).values({
                     spotify_id: user.id,
                     email: user.email,
                     display_name: user.display_name,
-                    avatar: user.images[0].url || null,
+                    avatar: user.images[0]?.url || null,
                     country: user.country
                 }).catch((e) => console.error(e))
             }

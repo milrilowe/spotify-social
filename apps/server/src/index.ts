@@ -8,7 +8,7 @@ import session from 'express-session';
 import pgSession from 'connect-pg-simple';
 import { Pool } from 'pg';
 
-export type { AppRouter, RouterInputs, RouterOutputs } from './types';
+export * from './types';
 
 const PORT = process.env.PORT || 3000;
 
