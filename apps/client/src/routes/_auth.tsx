@@ -1,11 +1,14 @@
 import { AppSidebar } from '@/components'
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { useAuth } from '@/context/auth'
+import { createFileRoute, Navigate, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth')({
-    beforeLoad: ({ context, location }) => {
-        if (!context.auth.isAuthenticated) {
+    loader: async ({ context, location }) => {
+        const session = await context.auth.getSession()
+
+        if (!session.isAuthenticated) {
             throw redirect({
-                to: '/login',
+                to: "/login",
                 search: {
                     redirect: location.pathname
                 }

@@ -2,13 +2,11 @@ import { Route } from "@/routes/callback";
 import { api } from "@/utils/trpc";
 import { useEffect, useRef } from "react";
 import { router } from "@/main";
-import { useQueryClient } from "@tanstack/react-query";
-import { getQueryKey } from "@trpc/react-query";
 import { useAuth } from "@/context/auth";
 
 export default function Callback() {
 
-    const { refetchSession } = useAuth()
+    const { getSession } = useAuth()
     const { code, state } = Route.useSearch()
     const storedState = window.sessionStorage.getItem('SPOTIFY_AUTH_STATE_KEY')
     const hasCalledMutation = useRef(false);
@@ -16,8 +14,8 @@ export default function Callback() {
     const callbackMutation = api.auth.callback.useMutation({
         onSuccess: async () => {
             const { redirect } = await JSON.parse(decodeURIComponent(storedState!))
-            await refetchSession
-            // router.navigate({ to: redirect || '/' })
+            await getSession()
+            router.navigate({ to: redirect || '/' })
             sessionStorage.removeItem('SPOTIFY_AUTH_STATE_KEY')
         }
     });
@@ -26,7 +24,7 @@ export default function Callback() {
         if (code &&
             state &&
             state === storedState &&
-            !callbackMutation.isPending &&
+            !callbackMutation.isLoading &&
             !hasCalledMutation.current
         ) {
             hasCalledMutation.current = true;
@@ -34,7 +32,7 @@ export default function Callback() {
         }
     }, [code, state, storedState, callbackMutation]);
 
-    if (callbackMutation.isPending) {
+    if (callbackMutation.isLoading) {
         return <div>Logging you in...</div>;
     }
 

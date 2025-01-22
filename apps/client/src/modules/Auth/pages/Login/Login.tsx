@@ -17,6 +17,6 @@ export default function Login() {
     }
 
     return (
-        <Button onClick={handleLogin} disabled={spotifyLogin.isPending}>Login with Spotify</Button>
+        <Button onClick={handleLogin} disabled={spotifyLogin.isLoading}>Login with Spotify</Button>
     )
 }

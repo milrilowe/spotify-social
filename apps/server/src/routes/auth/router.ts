@@ -36,7 +36,8 @@ export const authRouter = router({
         const spotifyAuthUrl = new URL('https://accounts.spotify.com/authorize');
         spotifyAuthUrl.searchParams.append('client_id', SPOTIFY_CLIENT_ID!);
         spotifyAuthUrl.searchParams.append('response_type', 'code');
-        spotifyAuthUrl.searchParams.append('redirect_uri', `${SPOTIFY_REDIRECT_URI!}`);
+        //batch callback url here
+        spotifyAuthUrl.searchParams.append('redirect_uri', SPOTIFY_REDIRECT_URI!);
         spotifyAuthUrl.searchParams.append('scope', SCOPES.join(' '));
         // spotifyAuthUrl.searchParams.append('show_dialog', 'true');
         spotifyAuthUrl.searchParams.append('state', state);
@@ -66,6 +67,7 @@ export const authRouter = router({
                 throw new TRPCError({
                     code: 'UNAUTHORIZED',
                     message: 'Failed to exchange authorization code',
+                    cause: tokenResponse.status
                 });
             }
 
@@ -114,7 +116,7 @@ export const authRouter = router({
             });
         }
     }),
-    getSession: publicProcedure.query(async ({ ctx }) => {
+    getSession: publicProcedure.mutation(async ({ ctx }) => {
         if (!ctx.session.spotifyTokens && !ctx.session.userId) return {
             user: null,
             spotify_id: null,

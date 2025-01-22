@@ -1,5 +1,7 @@
-import { api } from "@/utils/trpc";
-import { createContext, ReactNode, useContext } from "react";
+import { router } from "@/main";
+import { api, RouterOutputs } from "@/utils/trpc";
+import { getQueryKey } from "@trpc/react-query";
+import { createContext, ReactNode, useContext, useEffect } from "react";
 
 export interface AuthContext {
     isAuthenticated: boolean;
@@ -11,24 +13,26 @@ export interface AuthContext {
         email: string;
         avatar: string | null;
         country: string | null;
-    } | null
-    refetchSession: () => void
+    } | null,
+    isLoading: boolean;
+    getSession: () => Promise<RouterOutputs['auth']['getSession']>
 }
 
 const AuthContext = createContext<AuthContext | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const session = api.auth.getSession.useQuery();
+    const session = api.auth.getSession.useMutation({ mutationKey: getQueryKey(api.auth.getSession) });
 
-    async function refetchSession() {
-        await session.refetch();
+    async function getSession() {
+        return await session.mutateAsync();
     }
 
     const value: AuthContext = {
-        refetchSession,
+        getSession,
         user: session.data?.user || null,
         isAuthenticated: session.data?.isAuthenticated || false,
-        spotify_id: session.data?.spotify_id || null
+        spotify_id: session.data?.spotify_id || null,
+        isLoading: session.isLoading
     }
 
     return (
