@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { publicProcedure, router } from '../../trpc';
 import { SpotifyUser } from '../../types';
+import { refreshToken } from '../../utils/refreshToken';
 
 export const userRouter = router({
     me: publicProcedure.query(async ({ ctx }) => {
@@ -12,28 +13,28 @@ export const userRouter = router({
             });
         }
 
-        try {
-            const spotifyUser = await fetch("https://api.spotify.com/v1/me", {
-                headers: {
-                    Authorization: `Bearer ${ctx.session.spotifyTokens.access_token}`
-                }
-            });
 
-            if (!spotifyUser.ok) {
-                throw new TRPCError({
-                    code: 'INTERNAL_SERVER_ERROR',
-                    message: 'Failed to fetch Spotify user data'
-                });
+        const spotifyUser = await fetch("https://api.spotify.com/v1/me", {
+            headers: {
+                Authorization: `Bearer ${ctx.session.spotifyTokens.access_token}`
             }
+        });
 
-            return await spotifyUser.json();
-        } catch (error) {
+        if (spotifyUser.status === 401) {
+            throw new TRPCError({
+                code: 'UNAUTHORIZED',
+                message: 'unable to fetch /me (401) UNAUTHORIZED'
+            })
+        }
+
+        if (!spotifyUser.ok) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
-                message: 'Failed to fetch user data',
-                cause: error
-            });
+                message: 'error fetching /me'
+            })
         }
+
+        return await spotifyUser.json();
     }),
     getUser: publicProcedure.input(z.object({
         userId: z.string()

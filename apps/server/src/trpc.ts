@@ -1,40 +1,38 @@
-import { initTRPC, type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
+import { initTRPC, MiddlewareFunction, TRPCError, type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import type { Session } from "express-session";
-import type { SpotifyTokenResponse } from './types';
+import { refreshToken } from "./utils/refreshToken";
 
-interface AppSession extends Session {
+export interface SpotifyTokenResponse {
+    access_token: string;
+    token_type: string;
+    expires_in: number;
+    refresh_token: string;
+    scope: string;
+}
+
+export interface AppSession extends Session {
     spotifyTokens?: SpotifyTokenResponse;
     userId?: string;
 }
 
-
-export type Context = {
-    req: CreateExpressContextOptions["req"];
-    res: CreateExpressContextOptions["res"];
+export type Context = CreateExpressContextOptions & {
     session: AppSession;
 };
 
-const t = initTRPC.context<Context>().create();
-
-type ContextType = {
-    req: CreateExpressContextOptions['req'];
-    res: CreateExpressContextOptions['res'];
-    session: AppSession;
-}
-
-export const createContext = ({
-    req,
-    res,
-}: CreateExpressContextOptions): ContextType => ({
-    req,
-    res,
-    session: (req as any).session as AppSession
-});
+export const t = initTRPC.context<Context>().create();
 
 export const router = t.router;
 export const middleware = t.middleware;
 export const publicProcedure = t.procedure;
 
-// Add these exports for type inference
-export type { CreateExpressContextOptions };
+export const createContext = ({
+    req,
+    res,
+}: CreateExpressContextOptions): Context => {
+    return {
+        req,
+        res,
+        session: (req as any).session as AppSession
+    }
+};

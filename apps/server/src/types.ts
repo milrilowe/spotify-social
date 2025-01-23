@@ -1,6 +1,7 @@
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { appRouter } from './router';
 import type { Session } from "express-session";
+import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 
 export type AppRouter = typeof appRouter;
 export type RouterInputs = inferRouterInputs<AppRouter>;
@@ -32,3 +33,4 @@ export interface Image {
     height: number,
     width: number
 }
+

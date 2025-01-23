@@ -2,13 +2,16 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": [
-      "ES2015"
+      "ES2015",
+      "DOM" // Add this to include more type definitions
     ],
     "module": "ESNext",
     "rootDir": "./src",
     "outDir": "./dist",
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "strict": true, // Enable strict type checking
+    "esModuleInterop": true // Helps with module imports
   },
   "include": [
     "src"
